@@ -3450,11 +3450,14 @@ const controls = {
     glowpower2: 7.5,
     glowcolor2: [0, 44, 150],
     change: 0.0,
+    glowstrength3: 0.9,
+    glowpower3: 4.9,
 };
 let icosphere;
 let icosphere2;
 let icosphere3;
 let icosphere4;
+let icosphere5;
 let square;
 let cube;
 function loadScene() {
@@ -3466,6 +3469,8 @@ function loadScene() {
     icosphere3.create();
     icosphere4 = new __WEBPACK_IMPORTED_MODULE_3__geometry_Icosphere__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0_gl_matrix__["b" /* vec3 */].fromValues(0, 0, 0), 1.5, controls.tesselations);
     icosphere4.create();
+    icosphere5 = new __WEBPACK_IMPORTED_MODULE_3__geometry_Icosphere__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0_gl_matrix__["b" /* vec3 */].fromValues(0, 0, 0), 1.20, controls.tesselations);
+    icosphere5.create();
     square = new __WEBPACK_IMPORTED_MODULE_4__geometry_Square__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0_gl_matrix__["b" /* vec3 */].fromValues(0, 0, 0));
     square.create();
     cube = new __WEBPACK_IMPORTED_MODULE_5__geometry_Cube__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0_gl_matrix__["b" /* vec3 */].fromValues(0, 0, 0));
@@ -3559,6 +3564,8 @@ function main() {
     f4.addColor(controls, 'glowcolor2');
     f4.add(controls, 'glowstrength2', 0, 20).step(0.01);
     f4.add(controls, 'glowpower2', 0, 20).step(0.01);
+    f4.add(controls, 'glowstrength3', 0, 20).step(0.01);
+    f4.add(controls, 'glowpower3', 0, 20).step(0.01);
     // get canvas and webgl context
     const canvas = document.getElementById('canvas');
     const gl = canvas.getContext('webgl2');
@@ -3601,6 +3608,10 @@ function main() {
     const glow2 = new __WEBPACK_IMPORTED_MODULE_9__rendering_gl_ShaderProgram__["b" /* default */]([
         new __WEBPACK_IMPORTED_MODULE_9__rendering_gl_ShaderProgram__["a" /* Shader */](gl.VERTEX_SHADER, __webpack_require__(77)),
         new __WEBPACK_IMPORTED_MODULE_9__rendering_gl_ShaderProgram__["a" /* Shader */](gl.FRAGMENT_SHADER, __webpack_require__(78)),
+    ]);
+    const glow3 = new __WEBPACK_IMPORTED_MODULE_9__rendering_gl_ShaderProgram__["b" /* default */]([
+        new __WEBPACK_IMPORTED_MODULE_9__rendering_gl_ShaderProgram__["a" /* Shader */](gl.VERTEX_SHADER, __webpack_require__(79)),
+        new __WEBPACK_IMPORTED_MODULE_9__rendering_gl_ShaderProgram__["a" /* Shader */](gl.FRAGMENT_SHADER, __webpack_require__(80)),
     ]);
     var lastUpdate = Date.now();
     // This function will be called every frame
@@ -3698,10 +3709,14 @@ function main() {
         glow.setAtomscolor(__WEBPACK_IMPORTED_MODULE_0_gl_matrix__["c" /* vec4 */].fromValues(controls.glowcolor[0] / 255, controls.glowcolor[1] / 255, controls.glowcolor[2] / 255, 0.0));
         glow.setAtomspower(controls.glowpower);
         glow.setAtomsstrength(controls.glowstrength);
-        //glow: on the planet
+        //glow: on the edge
         glow2.setAtomscolor(__WEBPACK_IMPORTED_MODULE_0_gl_matrix__["c" /* vec4 */].fromValues(controls.glowcolor2[0] / 255, controls.glowcolor2[1] / 255, controls.glowcolor2[2] / 255, 0.0));
         glow2.setAtomspower(controls.glowpower2);
         glow2.setAtomsstrength(controls.glowstrength2);
+        //glow: on the planet
+        glow3.setAtomscolor(__WEBPACK_IMPORTED_MODULE_0_gl_matrix__["c" /* vec4 */].fromValues(controls.glowcolor2[0] / 255, controls.glowcolor2[1] / 255, controls.glowcolor2[2] / 255, 0.0));
+        glow3.setAtomspower(controls.glowpower3);
+        glow3.setAtomsstrength(controls.glowstrength3);
         gl.cullFace(gl.BACK);
         renderer.render(camera, glow, [icosphere4], //[icosphere,//square,cube,], 
         //vec4.fromValues(35/255, 137/255, 218/255, 1), dt/1000.0);
@@ -3717,7 +3732,9 @@ function main() {
         __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["c" /* vec4 */].fromValues(15 / 255, 94 / 255, 156 / 255, 0.1), dt / 1000.0);
         // renderer.render(camera, lambert, [icosphere3], 
         //   vec4.fromValues(controls.catomsphere2[0]/255, controls.catomsphere2[1]/255, controls.catomsphere2[2]/255, 0.1), dt/1000.0);
-        renderer.render(camera, glow2, [icosphere3], __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["c" /* vec4 */].fromValues(controls.catomsphere2[0] / 255, controls.catomsphere2[1] / 255, controls.catomsphere2[2] / 255, 0.1), dt / 1000.0);
+        renderer.render(camera, glow3, [icosphere3], __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["c" /* vec4 */].fromValues(controls.catomsphere2[0] / 255, controls.catomsphere2[1] / 255, controls.catomsphere2[2] / 255, 0.1), dt / 1000.0);
+        stats.end();
+        renderer.render(camera, glow2, [icosphere5], __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["c" /* vec4 */].fromValues(controls.catomsphere2[0] / 255, controls.catomsphere2[1] / 255, controls.catomsphere2[2] / 255, 0.1), dt / 1000.0);
         stats.end();
         // Tell the browser to call `tick` again whenever it renders a new frame
         requestAnimationFrame(tick);
@@ -16045,6 +16062,18 @@ module.exports = "#version 300 es\r\n\r\n//This is a vertex shader. While it is 
 /***/ (function(module, exports) {
 
 module.exports = "#version 300 es\r\n\r\n// This is a fragment shader. If you've opened this file first, please\r\n// open and read lambert.vert.glsl before reading on.\r\n// Unlike the vertex shader, the fragment shader actually does compute\r\n// the shading of geometry. For every pixel in your program's output\r\n// screen, the fragment shader is run for every bit of geometry that\r\n// particular pixel overlaps. By implicitly interpolating the position\r\n// data passed into the fragment shader by the vertex shader, the fragment shader\r\n// can compute what color to apply to its pixel based on things like vertex\r\n// position, light position, and vertex color.\r\nprecision highp float;\r\n\r\nuniform vec4 u_Color; // The color with which to render this instance of geometry.\r\nuniform float u_atomspower;\r\nuniform float u_atomsstrength;\r\nuniform vec4 u_atomscolor;\r\n// These are the interpolated values out of the rasterizer, so you can't know\r\n// their specific values without knowing the vertices that contributed to them\r\nin vec4 fs_Nor;\r\nin vec4 fs_LightVec;\r\nin vec4 fs_Col;\r\nin vec4 fs_Nor2;\r\n\r\nout vec4 out_Col; // This is the final output color that you will see on your\r\n                  // screen for the pixel that is currently being processed.\r\n\r\nvoid main()\r\n{\r\n    // Material base color (before shading)\r\n        vec4 diffuseColor = u_Color;\r\n\r\n        // Calculate the diffuse term for Lambert shading\r\n        float diffuseTerm = dot(normalize(fs_Nor), normalize(fs_LightVec));\r\n        // Avoid negative lighting values\r\n         diffuseTerm = clamp(diffuseTerm, 0.0, 1.0);\r\n\r\n        float ambientTerm = 0.1;\r\n\r\n        float lightIntensity = diffuseTerm + ambientTerm;   //Add a small float value to the color multiplier\r\n                                                            //to simulate ambient lighting. This ensures that faces that are not\r\n                                                            //lit by our point light are not completely black.\r\n\r\n        //Atomsphere\r\n        float alpha = 1.0 - dot(normalize(vec4(0.0, 0.0, -1.0, 0.0)), normalize(fs_Nor2));\r\n        alpha =  clamp(alpha * u_atomsstrength, 0.0, 1.0);\r\n        alpha =  pow(alpha, u_atomspower);                                                \r\n        // Compute final shaded color\r\n        //out_Col = vec4(u_atomscolor.xyz, alpha);\r\n        vec3 finalcolor = mix(u_atomscolor.xyz, diffuseColor.xyz, lightIntensity);\r\n        out_Col = vec4(finalcolor.rgb, alpha);\r\n}\r\n"
+
+/***/ }),
+/* 79 */
+/***/ (function(module, exports) {
+
+module.exports = "#version 300 es\r\n\r\n//This is a vertex shader. While it is called a \"shader\" due to outdated conventions, this file\r\n//is used to apply matrix transformations to the arrays of vertex data passed to it.\r\n//Since this code is run on your GPU, each vertex is transformed simultaneously.\r\n//If it were run on your CPU, each vertex would have to be processed in a FOR loop, one at a time.\r\n//This simultaneous transformation allows your program to run much faster, especially when rendering\r\n//geometry with millions of vertices.\r\n\r\nuniform mat4 u_Model;       // The matrix that defines the transformation of the\r\n                            // object we're rendering. In this assignment,\r\n                            // this will be the result of traversing your scene graph.\r\n\r\nuniform mat4 u_ModelInvTr;  // The inverse transpose of the model matrix.\r\n                            // This allows us to transform the object's normals properly\r\n                            // if the object has been non-uniformly scaled.\r\n\r\nuniform mat4 u_ViewProj;    // The matrix that defines the camera's transformation.\r\n                            // We've written a static matrix for you to use for HW2,\r\n                            // but in HW3 you'll have to generate one yourself\r\n\r\nin vec4 vs_Pos;             // The array of vertex positions passed to the shader\r\n\r\nin vec4 vs_Nor;             // The array of vertex normals passed to the shader\r\n\r\nin vec4 vs_Col;             // The array of vertex colors passed to the shader.\r\n\r\nout vec4 fs_Nor;            // The array of normals that has been transformed by u_ModelInvTr. This is implicitly passed to the fragment shader.\r\nout vec4 fs_LightVec;       // The direction in which our virtual light lies, relative to each vertex. This is implicitly passed to the fragment shader.\r\nout vec4 fs_Col;            // The color of each vertex. This is implicitly passed to the fragment shader.\r\nout vec4 fs_Nor2;\r\nconst vec4 lightPos = vec4(5, 5, 3, 1); //The position of our virtual light, which is used to compute the shading of\r\n                                        //the geometry in the fragment shader.\r\n\r\nvoid main()\r\n{\r\n    fs_Col = vs_Col;                         // Pass the vertex colors to the fragment shader for interpolation\r\n\r\n    mat3 invTranspose = mat3(u_ModelInvTr);\r\n    fs_Nor = vec4(invTranspose * vec3(vs_Nor), 0);          // Pass the vertex normals to the fragment shader for interpolation.\r\n                                                            // Transform the geometry's normals by the inverse transpose of the\r\n                                                            // model matrix. This is necessary to ensure the normals remain\r\n                                                            // perpendicular to the surface after the surface is transformed by\r\n                                                            // the model matrix.\r\n\r\n\r\n    vec4 modelposition = u_Model * vs_Pos;   // Temporarily store the transformed vertex positions for use below\r\n\r\n    fs_LightVec = lightPos - modelposition;  // Compute the direction in which the light source lies\r\n    fs_Nor2 = u_ViewProj * fs_Nor;\r\n    gl_Position = u_ViewProj * modelposition;// gl_Position is a built-in variable of OpenGL which is\r\n                                             // used to render the final positions of the geometry's vertices\r\n}\r\n"
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports) {
+
+module.exports = "#version 300 es\r\n\r\n// This is a fragment shader. If you've opened this file first, please\r\n// open and read lambert.vert.glsl before reading on.\r\n// Unlike the vertex shader, the fragment shader actually does compute\r\n// the shading of geometry. For every pixel in your program's output\r\n// screen, the fragment shader is run for every bit of geometry that\r\n// particular pixel overlaps. By implicitly interpolating the position\r\n// data passed into the fragment shader by the vertex shader, the fragment shader\r\n// can compute what color to apply to its pixel based on things like vertex\r\n// position, light position, and vertex color.\r\nprecision highp float;\r\n\r\nuniform vec4 u_Color; // The color with which to render this instance of geometry.\r\nuniform float u_atomspower;\r\nuniform float u_atomsstrength;\r\nuniform vec4 u_atomscolor;\r\n// These are the interpolated values out of the rasterizer, so you can't know\r\n// their specific values without knowing the vertices that contributed to them\r\nin vec4 fs_Nor;\r\nin vec4 fs_LightVec;\r\nin vec4 fs_Col;\r\nin vec4 fs_Nor2;\r\n\r\nout vec4 out_Col; // This is the final output color that you will see on your\r\n                  // screen for the pixel that is currently being processed.\r\n\r\nvoid main()\r\n{\r\n    // Material base color (before shading)\r\n        vec4 diffuseColor = u_Color;\r\n\r\n        // Calculate the diffuse term for Lambert shading\r\n        float diffuseTerm = dot(normalize(fs_Nor), normalize(fs_LightVec));\r\n        // Avoid negative lighting values\r\n         diffuseTerm = clamp(diffuseTerm, 0.0, 1.0);\r\n\r\n        float ambientTerm = 0.1;\r\n\r\n        float lightIntensity = diffuseTerm + ambientTerm;   //Add a small float value to the color multiplier\r\n                                                            //to simulate ambient lighting. This ensures that faces that are not\r\n                                                            //lit by our point light are not completely black.\r\n\r\n        //Atomsphere\r\n        float alpha = dot(normalize(vec4(0.0, 0.0, -1.0, 0.0)), normalize(fs_Nor2));\r\n        alpha =  clamp(alpha * u_atomsstrength, 0.0, 1.0);\r\n        alpha =  pow(alpha, u_atomspower);                                                \r\n        // Compute final shaded color\r\n        //out_Col = vec4(u_atomscolor.xyz, alpha);\r\n        vec3 finalcolor = mix(u_atomscolor.xyz, diffuseColor.xyz, lightIntensity);\r\n        out_Col = vec4(finalcolor.rgb, alpha);\r\n}\r\n"
 
 /***/ })
 /******/ ]);
