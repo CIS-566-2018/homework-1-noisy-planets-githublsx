@@ -50,7 +50,7 @@ const controls = {
   csnow: [235, 235, 235],
   ctree: [61, 117, 43],
   //	 17,70,0
-  colorwater: [0, 142, 255],//[15, 94, 156],
+  colorwater: [15, 94, 156],//[0, 142, 255],
   treesize: 14.0,
   treeoctaves: 6.0,
   treedepth: 0.27,
