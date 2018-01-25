@@ -72,7 +72,7 @@ const controls = {
   atomspherestrength: 1.2,
   atomspherepower: 2.8,
   catomsphere2: [45, 242, 255],
-  glowstrength: 1,
+  glowstrength: 1.3,
   glowpower: 1.6,
   glowcolor: [15, 94, 156],
   glowstrength2: 1,
