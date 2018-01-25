@@ -79,12 +79,15 @@ const controls = {
   glowpower2: 7.5,
   glowcolor2: [	0, 44, 150],
   change: 0.0,
+  glowstrength3: 0.9,
+  glowpower3: 4.9,
 };
 
 let icosphere: Icosphere;
 let icosphere2: Icosphere;
 let icosphere3: Icosphere;
 let icosphere4: Icosphere;
+let icosphere5: Icosphere;
 let square: Square;
 let cube: Cube;
 
@@ -97,6 +100,8 @@ function loadScene() {
   icosphere3.create();
   icosphere4 = new Icosphere(vec3.fromValues(0, 0, 0), 1.5, controls.tesselations);
   icosphere4.create();
+  icosphere5 = new Icosphere(vec3.fromValues(0, 0, 0), 1.20, controls.tesselations);
+  icosphere5.create();
   square = new Square(vec3.fromValues(0, 0, 0));
   square.create();
   cube = new Cube(vec3.fromValues(0, 0, 0));
@@ -192,6 +197,9 @@ function main() {
   f4.addColor(controls, 'glowcolor2');
   f4.add(controls, 'glowstrength2', 0, 20).step(0.01);
   f4.add(controls, 'glowpower2', 0, 20).step(0.01);
+  f4.add(controls, 'glowstrength3', 0, 20).step(0.01);
+  f4.add(controls, 'glowpower3', 0, 20).step(0.01);
+
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -244,6 +252,11 @@ function main() {
   const glow2 = new ShaderProgram([
     new Shader(gl.VERTEX_SHADER, require('./shaders/glow2-vert.glsl')),
     new Shader(gl.FRAGMENT_SHADER, require('./shaders/glow2-frag.glsl')),
+  ]);
+
+  const glow3 = new ShaderProgram([
+    new Shader(gl.VERTEX_SHADER, require('./shaders/glow3-vert.glsl')),
+    new Shader(gl.FRAGMENT_SHADER, require('./shaders/glow3-frag.glsl')),
   ]);
 
   var lastUpdate = Date.now();
@@ -358,10 +371,15 @@ function main() {
     glow.setAtomspower(controls.glowpower);
     glow.setAtomsstrength(controls.glowstrength);
 
-    //glow: on the planet
+    //glow: on the edge
     glow2.setAtomscolor(vec4.fromValues(controls.glowcolor2[0]/255, controls.glowcolor2[1]/255, controls.glowcolor2[2]/255, 0.0));
     glow2.setAtomspower(controls.glowpower2);
     glow2.setAtomsstrength(controls.glowstrength2);
+
+    //glow: on the planet
+    glow3.setAtomscolor(vec4.fromValues(controls.glowcolor2[0]/255, controls.glowcolor2[1]/255, controls.glowcolor2[2]/255, 0.0));
+    glow3.setAtomspower(controls.glowpower3);
+    glow3.setAtomsstrength(controls.glowstrength3);
 
     gl.cullFace(gl.BACK);
     renderer.render(camera, glow, [icosphere4], //[icosphere,//square,cube,], 
@@ -378,7 +396,10 @@ function main() {
       vec4.fromValues(15/255, 94/255, 156/255, 0.1), dt/1000.0);
     // renderer.render(camera, lambert, [icosphere3], 
     //   vec4.fromValues(controls.catomsphere2[0]/255, controls.catomsphere2[1]/255, controls.catomsphere2[2]/255, 0.1), dt/1000.0);
-    renderer.render(camera, glow2, [icosphere3], 
+    renderer.render(camera, glow3, [icosphere3], 
+      vec4.fromValues(controls.catomsphere2[0]/255, controls.catomsphere2[1]/255, controls.catomsphere2[2]/255, 0.1), dt/1000.0);
+    stats.end();
+    renderer.render(camera, glow2, [icosphere5], 
       vec4.fromValues(controls.catomsphere2[0]/255, controls.catomsphere2[1]/255, controls.catomsphere2[2]/255, 0.1), dt/1000.0);
     stats.end();
 
