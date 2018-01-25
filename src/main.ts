@@ -50,7 +50,7 @@ const controls = {
   csnow: [235, 235, 235],
   ctree: [61, 117, 43],
   //	 17,70,0
-  colorwater: [15, 94, 156],//[0, 142, 255],
+  colorwater: [0, 142, 255],//[15, 94, 156],//
   treesize: 14.0,
   treeoctaves: 6.0,
   treedepth: 0.27,
@@ -76,7 +76,7 @@ const controls = {
   glowpower: 1.6,
   glowcolor: [15, 94, 156],
   glowstrength2: 1,
-  glowpower2: 6.0,
+  glowpower2: 7.5,
   glowcolor2: [	0, 44, 150],
   change: 0.0,
 };
