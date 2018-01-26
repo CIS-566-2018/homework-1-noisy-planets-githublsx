@@ -381,6 +381,9 @@ function main() {
     glow3.setAtomspower(controls.glowpower3);
     glow3.setAtomsstrength(controls.glowstrength3);
 
+    // renderer.render(camera, lambert, [square], 
+    //   vec4.fromValues(1.0, 1.0, 1.0, 1.0), dt/1000.0);
+    // stats.end();
     gl.cullFace(gl.BACK);
     renderer.render(camera, glow, [icosphere4], //[icosphere,//square,cube,], 
       //vec4.fromValues(35/255, 137/255, 218/255, 1), dt/1000.0);
@@ -402,6 +405,8 @@ function main() {
     renderer.render(camera, glow2, [icosphere5], 
       vec4.fromValues(controls.catomsphere2[0]/255, controls.catomsphere2[1]/255, controls.catomsphere2[2]/255, 0.1), dt/1000.0);
     stats.end();
+
+
 
     // Tell the browser to call `tick` again whenever it renders a new frame
     requestAnimationFrame(tick);
